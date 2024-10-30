@@ -38,8 +38,8 @@ void UOverHeadWidget::ShowPLayerNetRole(APawn* InPawn)
 		break;
 	}
 
-	FString PlayerName = InPawn->GetName();
-	FString LocalRoleString = FString::Printf(TEXT("PlayerName: %s, Local Role: %s"),*PlayerName, *Role);
+	//FString PlayerName = InPawn->GetName();
+	FString LocalRoleString = FString::Printf(TEXT("Local Role: %s"), *Role);
 	SetDisplayText(LocalRoleString);
 }
 
