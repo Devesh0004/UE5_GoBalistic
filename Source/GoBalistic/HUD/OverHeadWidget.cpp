@@ -4,6 +4,7 @@
 #include "OverHeadWidget.h"
 
 #include "Components/TextBlock.h"
+#include "GameFramework/PlayerState.h"
 
 void UOverHeadWidget::SetDisplayText(FString TextToDisplay)
 {
@@ -36,8 +37,9 @@ void UOverHeadWidget::ShowPLayerNetRole(APawn* InPawn)
 		Role = FString("None");
 		break;
 	}
-	
-	FString LocalRoleString = FString::Printf(TEXT("Local Role: %s"), *Role);
+
+	FString PlayerName = InPawn->GetName();
+	FString LocalRoleString = FString::Printf(TEXT("PlayerName: %s, Local Role: %s"),*PlayerName, *Role);
 	SetDisplayText(LocalRoleString);
 }
 

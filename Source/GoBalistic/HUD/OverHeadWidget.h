@@ -27,4 +27,5 @@ public:
 protected:
 
 	virtual void OnLevelRemovedFromWorld(ULevel* InLevel, UWorld* InWorld);
+
 };
