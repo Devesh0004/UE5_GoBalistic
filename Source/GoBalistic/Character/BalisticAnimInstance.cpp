@@ -32,4 +32,5 @@ void UBalisticAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	bIsAcceleratring = BlasticCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.f ? true : false;
 	bWeaponEquipped = BlasticCharacter->IsWeaponEquipped();
 	bIsCrouched = BlasticCharacter->bIsCrouched;
+	bAiming = BlasticCharacter->IsAiming();
 }
