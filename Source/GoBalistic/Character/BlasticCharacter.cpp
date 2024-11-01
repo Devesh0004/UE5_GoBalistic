@@ -7,6 +7,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GoBalistic/BalisticComponents/CombatComponent.h"
 #include "GoBalistic/Weapon/Weapon.h"
 #include "Net/UnrealNetwork.h"
 
@@ -29,6 +30,9 @@ ABlasticCharacter::ABlasticCharacter()
 
 	OverHeadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverHeadWidget"));
 	OverHeadWidget->SetupAttachment(RootComponent);
+
+	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat"));
+	Combat->SetIsReplicated(true); 
 }
 
 void ABlasticCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -49,11 +53,21 @@ void ABlasticCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ABlasticCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if(Combat)
+	{
+		Combat->Character = this;
+	}
+}
+
 void ABlasticCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABlasticCharacter::Jump);
+	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ABlasticCharacter::EquipButtonPressed);
 	
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABlasticCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABlasticCharacter::MoveRight);
@@ -91,6 +105,14 @@ void ABlasticCharacter::Turn(float Value)
 void ABlasticCharacter::LookUp(float Value)
 {
 	AddControllerPitchInput(Value);
+}
+
+void ABlasticCharacter::EquipButtonPressed()
+{
+	if(Combat && HasAuthority())
+	{
+		Combat->EquipWeapon(OverlappingWeapon);
+	}
 }
 
 void ABlasticCharacter::SetOverlappingWeapon(AWeapon* Weapon)
