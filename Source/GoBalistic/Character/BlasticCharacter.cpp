@@ -109,7 +109,22 @@ void ABlasticCharacter::LookUp(float Value)
 
 void ABlasticCharacter::EquipButtonPressed()
 {
-	if(Combat && HasAuthority())
+	if(Combat)
+	{
+		if(HasAuthority())
+		{
+			Combat->EquipWeapon(OverlappingWeapon);
+		}
+		else
+		{
+			ServerEquipButtonPressed();
+		}
+	}
+}
+
+void ABlasticCharacter::ServerEquipButtonPressed_Implementation()
+{
+	if(Combat)
 	{
 		Combat->EquipWeapon(OverlappingWeapon);
 	}
