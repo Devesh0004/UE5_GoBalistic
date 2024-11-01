@@ -32,7 +32,9 @@ ABlasticCharacter::ABlasticCharacter()
 	OverHeadWidget->SetupAttachment(RootComponent);
 
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat"));
-	Combat->SetIsReplicated(true); 
+	Combat->SetIsReplicated(true);
+
+	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 }
 
 void ABlasticCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -68,6 +70,7 @@ void ABlasticCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABlasticCharacter::Jump);
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ABlasticCharacter::EquipButtonPressed);
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ABlasticCharacter::CrouchButtonPressed);
 	
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABlasticCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABlasticCharacter::MoveRight);
@@ -122,6 +125,18 @@ void ABlasticCharacter::EquipButtonPressed()
 	}
 }
 
+void ABlasticCharacter::CrouchButtonPressed()
+{
+	if(bIsCrouched)
+	{
+		UnCrouch();
+	}
+	else
+	{
+		Crouch();
+	}
+}
+
 void ABlasticCharacter::ServerEquipButtonPressed_Implementation()
 {
 	if(Combat)
@@ -144,6 +159,11 @@ void ABlasticCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 			OverlappingWeapon->ShowPickupWidget(true);
 		}
 	}
+}
+
+bool ABlasticCharacter::IsWeaponEquipped()
+{
+	return (Combat && Combat->EquippedWeapon);
 }
 
 void ABlasticCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
