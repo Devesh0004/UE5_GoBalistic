@@ -230,6 +230,13 @@ bool ABlasticCharacter::IsAiming()
 	return(Combat && Combat->bAiming);
 }
 
+AWeapon* ABlasticCharacter::GetEquippedWeapomn()
+{
+	if(Combat == nullptr) return nullptr;
+	
+	return Combat->EquippedWeapon;
+}
+
 void ABlasticCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {
 	if(OverlappingWeapon)
