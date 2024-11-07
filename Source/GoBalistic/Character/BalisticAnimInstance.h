@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "GoBalistic/BalisticTypes/TurningInPlace.h"
 #include "BalisticAnimInstance.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class GOBALISTIC_API UBalisticAnimInstance : public UAnimInstance
 {
@@ -67,4 +66,7 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	FTransform LeftHandTransform;
+
+	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	ETurningInPlace TurningInPlace;
 };

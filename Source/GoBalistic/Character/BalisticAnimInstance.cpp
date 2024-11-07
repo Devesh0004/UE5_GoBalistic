@@ -36,6 +36,7 @@ void UBalisticAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	EquippedWeapon = BlasticCharacter->GetEquippedWeapomn();
 	bIsCrouched = BlasticCharacter->bIsCrouched;
 	bAiming = BlasticCharacter->IsAiming();
+	TurningInPlace = BlasticCharacter->GetTurningInPlace();
 
 	FRotator AimRotation = BlasticCharacter->GetBaseAimRotation();
 	FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(BlasticCharacter->GetVelocity());	
