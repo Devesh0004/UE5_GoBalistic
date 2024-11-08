@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
+#define TRACE_LENGTH 80000.f
+
 class AWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -41,6 +43,8 @@ protected:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastFire();
+
+	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 	
 private:
 
