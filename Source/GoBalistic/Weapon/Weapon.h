@@ -29,6 +29,23 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void ShowPickupWidget(bool bShowWidget);
 	virtual void Fire(const FVector& HitTarget);
+	
+	//Texture For the Weapon Crosshairs
+
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	class UTexture2D* CrosshairCenter;
+
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	class UTexture2D* CrosshairRight;
+
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	class UTexture2D* CrosshairLeft;
+
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	class UTexture2D* CrosshairTop;
+
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	class UTexture2D* CrosshairBottom;
 
 protected:
 

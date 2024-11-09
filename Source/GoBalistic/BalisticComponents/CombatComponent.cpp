@@ -6,6 +6,8 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GoBalistic/Character/BlasticCharacter.h"
+#include "GoBalistic/HUD/BalisticHUD.h"
+#include "GoBalistic/PlayerController/BalisticPlayerController.h"
 #include "GoBalistic/Weapon/Weapon.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
@@ -30,10 +32,12 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
 	if(Character)
 	{
 		Character->GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	}
+	//Controller = Controller == nullptr ? Cast<ABalisticPlayerController>(Character->Controller) : Controller;
 }
 
 void UCombatComponent::SetAiming(bool bIsAiming)
@@ -117,9 +121,44 @@ void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 	}
 }
 
+void UCombatComponent::SetHudCrosshairs(float DeltaTime)
+{
+	if(Character == nullptr || Character->Controller == nullptr) return;
+
+	Controller = Controller == nullptr ? Cast<ABalisticPlayerController>(Character->Controller) : Controller;
+	if(Controller)
+	{
+		HUD = HUD == nullptr ? Cast<ABalisticHUD>(Controller->GetHUD()) : HUD;
+		if(HUD)
+		{
+			FHUDPackage HudPackage;
+			if(EquippedWeapon)
+			{
+				
+				HudPackage.CrosshairCenter = EquippedWeapon->CrosshairCenter;
+				HudPackage.CrosshairLeft = EquippedWeapon->CrosshairLeft;
+				HudPackage.CrosshairRight = EquippedWeapon->CrosshairRight;
+				HudPackage.CrosshairTop = EquippedWeapon->CrosshairTop;
+				HudPackage.CrosshairBottom = EquippedWeapon->CrosshairBottom;
+			}
+			else
+			{
+				HudPackage.CrosshairCenter = nullptr;
+				HudPackage.CrosshairLeft = nullptr;
+				HudPackage.CrosshairRight = nullptr;
+				HudPackage.CrosshairTop = nullptr;
+				HudPackage.CrosshairBottom = nullptr;
+			}
+			HUD->SetHudPackage(HudPackage);
+		}
+	}
+}
+
 void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	SetHudCrosshairs(DeltaTime);
 }
 
 void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
