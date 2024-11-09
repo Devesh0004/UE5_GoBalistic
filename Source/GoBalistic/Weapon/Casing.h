@@ -30,7 +30,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float ShellEjectionImpulse;
-
+	
 	UPROPERTY(EditAnywhere)
 	class USoundCue* ShellSound;
 	

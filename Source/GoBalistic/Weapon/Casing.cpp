@@ -19,13 +19,13 @@ ACasing::ACasing()
 
 	CasingMesh->SetNotifyRigidBodyCollision(true);
 
-	ShellEjectionImpulse = 10.f;
+	ShellEjectionImpulse = 20.f;
 }
 
 void ACasing::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	CasingMesh->OnComponentHit.AddDynamic(this, &ACasing::ACasing::OnHit);
 	CasingMesh->AddImpulse(GetActorForwardVector() * ShellEjectionImpulse);
 }
