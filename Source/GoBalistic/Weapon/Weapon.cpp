@@ -9,6 +9,7 @@
 #include "Components/WidgetComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GoBalistic/Character/BlasticCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 AWeapon::AWeapon()
@@ -124,13 +125,15 @@ void AWeapon::Fire(const FVector& HitTarget)
 		if(AmmoEjectSocket)
 		{
 			FTransform SocketTransform = AmmoEjectSocket->GetSocketTransform(WeaponMesh);
+			const FRotator RandRotator = UKismetMathLibrary::RandomRotator();
+			const FRotator ShellRotator = UKismetMathLibrary::RLerp(SocketTransform.GetRotation().Rotator(), RandRotator, .35f, true);
 		
 			if(CasingClass)
 			{
 				UWorld* World = GetWorld();
 				if(World)
 				{
-					World->SpawnActor<ACasing>(CasingClass, SocketTransform.GetLocation(), SocketTransform.GetRotation().Rotator());
+					World->SpawnActor<ACasing>(CasingClass, SocketTransform.GetLocation(), ShellRotator);
 				}
 			}
 		}
