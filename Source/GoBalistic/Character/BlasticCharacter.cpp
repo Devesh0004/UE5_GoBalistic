@@ -316,6 +316,13 @@ AWeapon* ABlasticCharacter::GetEquippedWeapomn()
 	return Combat->EquippedWeapon;
 }
 
+FVector ABlasticCharacter::GetHitTarget() const
+{
+	if(Combat == nullptr) return FVector();
+
+	return Combat->HitTarget;
+}
+
 void ABlasticCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {
 	if(OverlappingWeapon)
