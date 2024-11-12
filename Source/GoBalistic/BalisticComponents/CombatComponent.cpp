@@ -37,7 +37,6 @@ void UCombatComponent::BeginPlay()
 	{
 		Character->GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	}
-	//Controller = Controller == nullptr ? Cast<ABalisticPlayerController>(Character->Controller) : Controller;
 }
 
 void UCombatComponent::SetAiming(bool bIsAiming)
@@ -149,6 +148,27 @@ void UCombatComponent::SetHudCrosshairs(float DeltaTime)
 				HudPackage.CrosshairTop = nullptr;
 				HudPackage.CrosshairBottom = nullptr;
 			}
+			//Calculate Crosshair Spread
+
+			//[0, 600] -> [0, 1]
+			FVector2D WalkSpeedRange(0.f, Character->GetCharacterMovement()->MaxWalkSpeed);
+			FVector2D VelocityMultiplierRange(0.f, 1.f);
+			FVector Velocity = Character->GetVelocity();
+			Velocity.Z = 0.f;
+			
+			CrosshairsVelocityFactor = FMath::GetMappedRangeValueClamped(WalkSpeedRange, VelocityMultiplierRange, Velocity.Size());
+
+			if(Character->GetCharacterMovement()->IsFalling())
+			{
+				CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 2.25f, DeltaTime, 2.25f);
+			}
+			else
+			{
+				CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 0.f, DeltaTime, 30.f);
+			}
+			
+			HudPackage.CrosshairSpread = CrosshairsVelocityFactor + CrosshairInAirFactor;
+			
 			HUD->SetHudPackage(HudPackage);
 		}
 	}
